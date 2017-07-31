@@ -101,7 +101,7 @@ main: {
 	}
 
 	#search for clusters using blast.ids and user-supplied gff file that is transformed into .coo3 format
-	if (! -e "$outpath/$opts{'o'}.anchor" || -z "$outpath/$opts{'o'}.anchor") {
+	if (! -e "$outpath/$opts{'o'}.anchor.gff" || -z "$outpath/$opts{'o'}.anchor.gff") {
 		
 		#load information about query cluster proteins into a hash
 		open(my $info_in, '<', $opts{'i'}) or usage("Error: cannot read cluster info file.. Exiting..\n");
@@ -128,15 +128,15 @@ main: {
 
 		#print out clusters to file	
 		print "Found ".scalar(keys(%{$singletons}))." unclustered hits\n";	
-		open(my $noan_out, '>', "$opts{'o'}.no_anchor") or die "Error: cannot open file for output.. Exiting..\n";
+		open(my $noan_out, '>', "$opts{'o'}.no_anchor.gff") or die "Error: cannot open $opts{'o'}.no_anchor.gff for output.. Exiting..\n";
 		print "Found ".scalar(keys(%{$tempclref}))." clusters missing anchor\n";
 		Cluster_print($tempclref, $noan_out);
-		open(my $an_out, '>', "$opts{'o'}.anchor") or die "Error: cannot open file for output.. Exiting..\n";
+		open(my $an_out, '>', "$opts{'o'}.anchor.gff") or die "Error: cannot open $opts{'o'}.anchor.gff for output.. Exiting..\n";
 		print "Found ".scalar(keys(%{$trueclref}))." clusters with anchor\n";
 		Cluster_print($trueclref, $an_out);
 	
 	} else {
-		print "Outputfile $opts{'o'}.anchor already exists.. Skipping outputfile creation step..\n";
+		print "Outputfile $opts{'o'}.anchor.gff already exists.. Skipping outputfile creation step..\n";
 	}
 }
 
@@ -379,14 +379,16 @@ sub Cluster_print {
 	to the output filehandle.
 	/;
 	die $usage unless @_ == 2;
-	
 	my ($clusters, $out) = @_;
-	
 	foreach my $cluster (sort keys %{$clusters}) { 
 		my %sortedpositions;
 		foreach my $protein (sort keys %{$clusters->{$cluster}}) { 
 			my $most_downstream = ${$clusters->{$cluster}->{$protein}}[1];
-			$sortedpositions{$most_downstream} = "$cluster\t$protein\t".join("\t", @{$clusters->{$cluster}->{$protein}})."\n";
+			#Supercontig_1.128  cluster_retrieve_gene 1291 1529 . + . clusterId Fusoxhdv247_ac1; proteinId Fusoxhdv247_FOVG18788T0;  homologyGroup vao_model_3_MCL1000; function Vanillyl alcohol oxidase
+			my ($contig, $range, $orientation, $homolog, $annotation) = @{$clusters->{$cluster}->{$protein}};
+			my ($upstream, $downstream) = split/-/, $range;
+			$sortedpositions{$most_downstream} = "$contig\tcluster_retrieve_gene\t$downstream\t$upstream\t.\t$orientation\t.\tclusterId $cluster; proteinId $protein; homologyGroup $homolog; annotation $annotation\n";			
+			#$sortedpositions{$most_downstream} = "$cluster\t$protein\t".join("\t", @{$clusters->{$cluster}->{$protein}})."\n";
 		}
 		foreach my $position (sort keys %sortedpositions) {			
 			print $out $sortedpositions{$position};
