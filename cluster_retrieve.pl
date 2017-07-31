@@ -11,28 +11,41 @@ sub usage {
 	if (not defined($message)) { $message = ''}
 	my $usage = qq/
 Usage: cluster_retrieve.pl [OPTIONS]
--g <gff3_file> 
--c <coo3_file> Required if not providing a gff3 file
--p <proteome> multifasta
+-g <gff_file> filename must be formatted: <omecode>.rest_of_filename
+-c <coo3_file> Required if not providing a gff file (can contain multiple genomes)
+-p <proteome> multifasta (can contain multiple genomes, if providing coo3)
 -f <cluster_model_fasta> 
 -i <cluster_model_info> 
 -o <analysis_name> should include absolute path
+
 This script searches your genome of interest for clusters containing
 hits to proteins supplied in the cluster fasta file, and outputs a 
-two files: one with clusters containing anchor genes, and another
-with clusters not containing anchor genes. gff3 files
-must be in the standard format adhered to by JGI. Headers in the
-multifasta file must be formatted as ">genomecode_proteinID", where
-proteinIDs have no '_'s. If supplying a coo3 file, it must be a 
-whitespace separated file where 1st column = sequenceheader, 
-2nd = contig name, 3rd = most downstream position of CDS, 4th = most
-upstream position, 5th = strand (+ or -)
-Criteria for hits are minimum 50 bitscore, minimum 30% identity and 
-where alignment is 50-150% of query sequence length (criteria be 
-manually changed if desired starting @ line 153)
-Criteria for defining clusters based on a maximum of 6 intervening
-genes between hits
-A concatenated gff3 or coo3, and protein multifasta may be provided
+two files with: 
+	1) clusters containing anchor genes
+	2) clusters not containing anchor genes. 
+gff files must be in the standard format adhered to by JGI, where the following collumns contain:
+	1st column = contig ID
+	3rd column = feature type (e.g., CDS)
+	4th column = most downstream position of CDS
+	5th column = most upstream position of CDS
+	7th column = strand (+ or -)
+	8th column = annotation info
+e.g., VVO_00001 JGI CDS 1562 1588 . - 0 name "yvh1"; proteinId 110841; exonNumber 8
+Headers in the multifasta file must be formatted as 
+	>genomecode_proteinID, where proteinIDs have no '_'s
+If supplying a coo3 file, it must be a whitespace separated file where:
+	1st column = sequenceheader (ie., genomecode_proteinID, where proteinIDs have no '_'s)
+	2nd column = contig name
+	3rd column = most downstream position of CDS
+	4th column = most upstream position
+	5th column = strand (+ or -)
+Criteria for hits are (can be manually changed starting at line 153 in this script):
+	1) minimum 50 bitscore
+	2) minimum 30% identity 
+	3) alignment is 50-150% of query sequence length 
+Criteria for defining clusters based on:
+	1) a maximum of 6 intervening genes between hits
+A coo3 file and protein multifasta, with information from multiple genomes may be provided 
 to search multiple genomes at once for a cluster of interest\n\n/;
 	die($usage, $message);
 }
@@ -384,25 +397,36 @@ sub Cluster_print {
 sub gff2coo {
 	my $usage = qq/
 gff2coo(<gff_file>, <coo_outfile)
-sub gff2coo (partly courtesy of J. Slot) formats GFF3 files from JGI 
+sub gff2coo (partly courtesy of J. Slot) formats GFF files from JGI 
 into coo3 files used by various clustering pipelines\n\n/;
 	die($usage, "Error: incorrect number of args in gff2coo\n") if (scalar @_ != 2);
 	my ($gff_file, $coo3_outfile) = @_;
 	my (%coo_hash);
 	open(my $gff_in, '<', $gff_file) or die($usage, "Error: could not open $gff_file for reading\n");
+	my ($gfffilename) = fileparse($gff_file);
+	$gfffilename =~ m/^([^\.]+)/;
+	my $ome = $1;
 	while (my $line = <$gff_in>) {
-		next if ($line =~ m/^#/);
+		next if ($line =~ m/^#/ || $line =~ m/^\s/);
 		chomp $line;
 		$line = $line . ";";
+
 		#acquire info
 		my @fields = split ("\t", $line);
 		my ($contig, $boundary1, $boundary2, $orientation) = ($fields[0], $fields[3], $fields[4], $fields[6]);
 		#the following is for gff3 files from JGI
-		if ($fields[2] eq "gene"){				
-			my @metadata = split/;/, $fields[8];
-			my ($name, $ome, $protid) = split/\|/, $metadata[1];
-			$coo_hash{$ome}{$contig}{"${ome}_$protid"}{$boundary1} = $orientation;
-			$coo_hash{$ome}{$contig}{"${ome}_$protid"}{$boundary2} = $orientation;
+		if ($fields[2] eq "CDS"){				
+			my $accession;
+			$fields[8] .= " ";
+			if ($fields[8] =~ m/[Pp]roteinId (.+?)[ ;]/) {$accession = $1;$accession =~s/"//g;}#jgi
+			elsif ($fields[8] =~ m/transcript_id (.+?)[ ;]/s) {$accession = $1;$accession =~s/"//g;}#broad
+			elsif ($fields[8] =~ m/protein_id=(.+?)[ ;]/s) {$accession = $1;$accession =~s/"//g;}#ncbi
+			else {print "no match $line\n"}
+			#hash data to make .coo file
+			#print "$fields[0]\n";
+			my $add_protein = "$ome"."_"."$accession";
+			$coo_hash{$ome}{$contig}{$add_protein}{$boundary1} = $orientation;
+			$coo_hash{$ome}{$contig}{$add_protein}{$boundary2} = $orientation;
 		}
 	}
 	open (my $coo_out, '>', $coo3_outfile) or die($usage, "Error: cannot open $coo3_outfile for writing\n");
@@ -429,6 +453,5 @@ into coo3 files used by various clustering pipelines\n\n/;
 		}
 	}
 }
-
 
 
