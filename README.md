@@ -24,13 +24,13 @@ cluster_retrieve.pl [OPTIONS]
 
 -g <gff_file> filename must be formatted: <omecode>.rest_of_filename
 
--c <coo3_file> Required if not providing a gff file (can contain multiple genomes)
+-c <coo3_file> required if not providing a gff file (can contain multiple genomes)
 
 -p <proteome_file> multifasta (can contain multiple genomes, if providing coo3)
 
--f <cluster_model_fasta> Can be found in model_fasta directory
+-f <cluster_model_fasta> can be found in model_fasta/ directory
 
--i <cluster_model_info> Can be found in model_info directory
+-i <cluster_model_info> can be found in model_info/ directory
 
 -o <analysis_name> should include absolute path
 
