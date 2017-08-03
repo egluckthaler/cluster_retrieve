@@ -26,7 +26,7 @@ cluster_retrieve.pl [OPTIONS]
 
 -c <coo3_file> Required if not providing a gff file (can contain multiple genomes)
 
--p <proteome> multifasta (can contain multiple genomes, if providing coo3)
+-p <proteome_file> multifasta (can contain multiple genomes, if providing coo3)
 
 -f <cluster_model_fasta> Can be found in model_fasta directory
 
