@@ -22,7 +22,7 @@ The provided script, cluster_retrieve.pl, must be run from the command-line.
 # Usage
 cluster_retrieve.pl [OPTIONS]
 
--g <gff_file> filename must be formatted: <omecode>.rest_of_filename
+-g <gff_file> filename must be formatted: \<omecode\>.rest_of_filename
 
 -c <coo3_file> required if not providing a gff file (can contain multiple genomes)
 
