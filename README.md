@@ -6,28 +6,34 @@ The provided script, cluster_retrieve.pl, must be run from the command-line.
 1. Perl (tested with version 5.10.1)
 
 2. The following Perl modules (should already be shipped with tested Perl distribution):
-		- Getopt::Std
-		- File::Basename
-		- FileHandle
+	- Getopt::Std
+	- File::Basename
+	- FileHandle
 		
 3. NCBI BLAST+ (tested with version 2.2.25+)
-		- Must be executable from your path
-		- To add to your path, enter the following command in your shell:
-		
-			```
-			export PATH=$PATH:<path_to_blast_bin_directory>
-			```
+	- Must be executable from your path
+	- To add to your path, enter the following command in your shell:
+		```
+		export PATH=$PATH:<path_to_blast_bin_directory>
+		```
 			
 4. mkdir (should already be shipped with most shells)
 
 # Usage
 cluster_retrieve.pl [OPTIONS]
+
 -g <gff_file> filename must be formatted: <omecode>.rest_of_filename
+
 -c <coo3_file> Required if not providing a gff file (can contain multiple genomes)
+
 -p <proteome> multifasta (can contain multiple genomes, if providing coo3)
+
 -f <cluster_model_fasta> Can be found in model_fasta directory
+
 -i <cluster_model_info> Can be found in model_info directory
+
 -o <analysis_name> should include absolute path
+
 
 This script searches your genome of interest for clusters containing
 hits to proteins supplied in the cluster fasta file, and outputs a 
