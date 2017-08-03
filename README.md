@@ -1,5 +1,6 @@
 # Overview
-Script and associated data files to retrieve putative phenylpropanoid degrading clusters from user-supplied genomes of interest. The provided script, cluster_retrieve.pl, must be run from the command-line.
+Script and associated data files to retrieve putative phenylpropanoid degrading clusters from user-supplied genomes of interest. 
+The provided script, cluster_retrieve.pl, must be run from the command-line.
 
 # Software requirements
 1. Perl (tested with version 5.10.1)
