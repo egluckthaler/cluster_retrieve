@@ -41,14 +41,15 @@ two files with:
 2. clusters not containing anchor genes
 
 gff files must be in the standard format adhered to by the JGI, where the following collumns contain:
-	- 1st column = contig ID
-	- 3rd column = feature type (e.g., CDS)
-	- 4th column = most downstream position of CDS
-	- 5th column = most upstream position of CDS
-	- 7th column = strand (+ or -)
-	- 8th column = annotation info
+- 1st column = contig ID
+- 3rd column = feature type (e.g., CDS)
+- 4th column = most downstream position of CDS
+- 5th column = most upstream position of CDS
+- 7th column = strand (+ or -)
+- 8th column = annotation info
 	
 e.g., VVO_00001 JGI CDS 1562 1588 . - 0 name "yvh1"; proteinId 110841; exonNumber 8
+
 Headers in the multifasta file must be formatted as >genomecode_proteinID, where proteinIDs have no '_'
 
 If supplying a coo3 file (custom file format used by this script), it must be a whitespace separated file where:
