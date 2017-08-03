@@ -62,9 +62,9 @@ two files with:
 - Criteria for hits are (can be manually changed starting at line 153 in this script):
 	- minimum 50 bitscore
 	- minimum 30% identity 
-	- alignment is 50-150% of query sequence length 
-	
-- Criteria for defining clusters based on: 
+	- alignment is 50-150% of query sequence length
+
+- Criteria for defining clusters based on: 
 	- a maximum of 6 intervening genes between hits
 	
 - A coo3 file and protein multifasta, with information from multiple genomes may be provided to search multiple genomes at once for a cluster of interest
