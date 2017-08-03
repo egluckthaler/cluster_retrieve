@@ -9,12 +9,15 @@ The provided script, cluster_retrieve.pl, must be run from the command-line.
 		- Getopt::Std
 		- File::Basename
 		- FileHandle
+		
 3. NCBI BLAST+ (tested with version 2.2.25+)
 		- Must be executable from your path
 		- To add to your path, enter the following command in your shell:
+		
 			```
 			export PATH=$PATH:<path_to_blast_bin_directory>
 			```
+			
 4. mkdir (should already be shipped with most shells)
 
 # Usage
