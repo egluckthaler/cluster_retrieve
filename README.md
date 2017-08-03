@@ -4,6 +4,7 @@ The provided script, cluster_retrieve.pl, must be run from the command-line.
 
 # Software requirements
 1. Perl (tested with version 5.10.1)
+
 2. The following Perl modules (should already be shipped with tested Perl distribution):
 		- Getopt::Std
 		- File::Basename
