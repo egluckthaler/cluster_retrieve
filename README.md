@@ -57,12 +57,15 @@ If supplying a coo3 file (custom file format used by this script), it must be a 
 	- 3rd column = most downstream position of CDS
 	- 4th column = most upstream position of CDS
 	- 5th column = DNA strand (+ or -)
+	
 Criteria for hits are (can be manually changed starting at line 153 in this script):
 	- minimum 50 bitscore
 	- minimum 30% identity 
 	- alignment is 50-150% of query sequence length 
+	
 Criteria for defining clusters based on:
 	- a maximum of 6 intervening genes between hits
+	
 A coo3 file and protein multifasta, with information from multiple genomes may be provided 
 to search multiple genomes at once for a cluster of interest\n\n/;
 
