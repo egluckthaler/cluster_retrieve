@@ -35,9 +35,8 @@ cluster_retrieve.pl [OPTIONS]
 -o <analysis_name> should include absolute path
 
 
-This script searches your genome of interest for clusters containing
-hits to proteins supplied in the cluster fasta file, and outputs a 
-two files with: 
+This script searches your genome of interest for clusters containing hits to proteins supplied in the cluster fasta file, and outputs 
+two files with:
 	1) clusters containing anchor genes
 	2) clusters not containing anchor genes. 
 gff files must be in the standard format adhered to by the JGI, where the following collumns contain:
